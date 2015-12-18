@@ -1,0 +1,22 @@
+{
+  "name": "iris-scripts-operator-arm",
+  "version": "1.0.0",
+  "description": "arm engine",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdk-group/iris-scripts-operator-arm.git"
+  },
+  "author": "SS",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sdk-group/iris-scripts-operator-arm/issues"
+  },
+  "homepage": "https://github.com/sdk-group/iris-scripts-operator-arm#readme",
+  "devDependencies": {
+    "node-uuid": "^1.4.7"
+  }
+}
