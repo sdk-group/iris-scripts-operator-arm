@@ -1,24 +1,13 @@
 'use strict'
 
-let uuid = require('node-uuid');
+let Entry = require('./EntryPoint.js');
+let User = require('./modules/User.js');
+let connection = require('./modules/Connection.js');
 
-class Main {
-  constructor() {
-    this.id = uuid.v1();
-  }
-  attach(app) {
-    this.front = app;
-    let self = this;
-    app.controller = {
-      self() {
-          return self;
-        },
-        require(name) {
-          console.log(name);
-        }
-    };
+let arm_operator = new User();
+let entry = new Entry();
 
-  }
-}
+entry.expose('connection', connection);
+entry.expose('user', arm_operator);
 
-module.exports = Main;
+module.exports = entry;

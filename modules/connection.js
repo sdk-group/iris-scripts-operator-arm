@@ -5,6 +5,7 @@ let _ = require('lodash');
 class Connection {
   constructor() {
     this.methods = {};
+    this.token = false;
   }
   addConnectionMethod(method) {
     console.log('method added', method.name);
@@ -15,13 +16,12 @@ class Connection {
     let method_name = name || this.current_method;
     return this.methods[method_name];
   }
-  request({
-    uri: uri,
-    data: data,
-    method: method
-  }) {
+  request(uri, data, method) {
     if (!_.size(this.methods)) throw new Error('no connection methods');
     return this.getMethod(method).request(uri, data);
+  }
+  setToken(token) {
+    this.token = token || false;
   }
 }
 

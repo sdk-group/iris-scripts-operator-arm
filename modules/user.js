@@ -1,20 +1,30 @@
 'use strict'
 
-let connection = require('./connection.js');
+let _ = require('lodash');
+
+let connection = require('./Connection.js');
 
 class User {
   constructor() {
     this.fields = {};
   }
   login(login, password) {
-    return new Promise((resolve, reject) => {
-      console.log('login is %s', login);
-      console.log('password is %s', password);
-      connection.request('/login').then((result) => {
-        this.token = result.token || 'nope';
-        resolve(!!result.token);
-      });
+    let try_loggin = connection.request('/login', {
+      login, password
+    }).then((result) => {
+      connection.setToken(result.token);
+      return this.fields.logged_in = !!result.token;
     });
+
+    try_loggin.then(() => {
+      if (!this.isLogged()) return false;
+      return connection.request('/userinfo').then((result) => _.assign(this.fields, result));
+    });
+
+    return try_loggin;
+  }
+  isLogged() {
+    return this.fields.logged_in;
   }
 }
 
