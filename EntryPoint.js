@@ -6,20 +6,17 @@ class EntryPoint {
   }
   attach(app) {
     this.front = app;
-    let self = this;
-    app.controller = {
-      self() {
-          return self;
-        },
-
-        require(name) {
-          if (self.exposed_modules.hasOwnProperty(name)) return self.exposed_modules[name];
-          throw new Error('no such module "' + name + '"');
-        }
-    };
+    app.controller = this;
   }
   expose(name, module) {
     this.exposed_modules[name] = module;
+  }
+  self() {
+    return this;
+  }
+  require(name) {
+    if (this.exposed_modules.hasOwnProperty(name)) return this.exposed_modules[name];
+    throw new Error('no such module "' + name + '"');
   }
 }
 
