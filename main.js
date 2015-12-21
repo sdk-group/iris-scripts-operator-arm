@@ -7,10 +7,8 @@ let init_data = {
     update_uri: 'listen://queue/update',
     next: '/queue/get/next',
     specific: '/queue/get/specific',
-    postpone: '/queue/postpone',
-    redirect: '/queue/redirect',
-    close: '/queue/close',
-    list: '/queue/list'
+    list: '/queue/list',
+    list: '/queue/ticket/state'
   }
 };
 
@@ -22,7 +20,7 @@ let Queue = require('./modules/Queue.js');
 let connection = require('./modules/Connection.js');
 
 let arm_operator = new User();
-let qeue = new Queue(arm_operator);
+let queue = new Queue(arm_operator);
 let entry = new Entry();
 
 entry.expose('connection', connection);

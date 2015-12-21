@@ -18,5 +18,8 @@
   "homepage": "https://github.com/sdk-group/iris-scripts-operator-arm#readme",
   "devDependencies": {
     "node-uuid": "^1.4.7"
+  },
+  "dependencies": {
+    "eventemitter2": "^0.4.14"
   }
 }

@@ -1,7 +1,5 @@
 'use strict'
 
-let connection = require('./Connection.js');
-
 class Ticket {
   constructor(data, queue) {
     this.queue = queue;

@@ -1,25 +1,23 @@
 'use strict'
 
+let Module = require('./Module.js');
+
 let connection = require('./connection.js');
 let Ticket = require('./Ticket.js');
 let ShortcutRegistry = require('./ShortcutRegistry.js');
 
 let getShortcut = ShortcutRegistry.getShortcut.bind(ShortcutRegistry, 'queue');
 
-class Queue {
+class Queue extends Module {
   constructor(user) {
+    super();
     this.user = user;
     this.in_queue = 0;
     this.waiting = 0;
     this.current_ticket = false;
-    connection.subscribe(getShortcut('update_uri'), this.queueUpdate);
-  }
-  onUpdate(cb) {
-    connection.subscribe(getShortcut('update_uri'), cb);
-  }
-  queueUpdate(queuedata) {
-    this.in_queue = queuedata.status.in_queue;
-    this.waiting = queuedata.status.postponed;
+    connection.subscribe(getShortcut('update_uri'), (data) => {
+      this.emit('queue.update', data);
+    });
   }
   getNextTicket() {
     if (!this.user.isLogged()) return Promise.reject('not logged');

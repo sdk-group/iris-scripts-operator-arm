@@ -1,13 +1,18 @@
 'use strict'
 
+let Module = require('./Module.js');
+
 let _ = require('lodash');
 
 let connection = require('./Connection.js');
 
-class User {
+class User extends Module {
   constructor() {
+    super();
     this.fields = {};
-    this.callback = {};
+  }
+  getId() {
+    return this.fields.id;
   }
   login(login, password) {
     let try_loggin = connection.request('/login', {
@@ -21,24 +26,13 @@ class User {
       if (!this.isLogged()) return false;
       return connection.request('/userinfo').then((result) => _.assign(this.fields, result));
     }).then((result) => {
-      this.emit('changed', true);
+      this.emit('user.fields.changed', this.fields);
     });
 
     return try_loggin;
   }
   isLogged() {
     return this.fields.logged_in;
-  }
-  on(name, cb) {
-    if (!this.callback.hasOwnProperty(name)) this.callback[name] = [];
-    this.callback[name].push(cb);
-
-    return this;
-  }
-  emit(name, data) {
-    if (this.callback.hasOwnProperty(name)) {
-      _.forEach(this.callback[name], (cb) => cb(data));
-    }
   }
 }
 
