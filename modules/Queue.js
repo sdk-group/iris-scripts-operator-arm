@@ -49,13 +49,14 @@ class Queue extends Module {
       route
     });
   }
-  listTickets(count = 10) {
+  listTickets(state, count = 10) {
     if (!this.user.isLogged()) return Promise.reject('not logged');
 
     let user_id = this.user.fields.id;
 
     return connection.request(getShortcut('list'), {
       user_id,
+      state,
       count
     });
   }
