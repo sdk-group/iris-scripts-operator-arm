@@ -10,6 +10,10 @@ class Ticket {
   getInfo() {
     return this.info;
   }
+  getLabel() {
+    //@NOTE: former human redable id
+
+  }
   waiting() {
     let state = 'waiting';
     return this.queue.changeState(state, this)

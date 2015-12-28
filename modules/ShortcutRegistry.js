@@ -1,7 +1,5 @@
 'use strict'
 
-let _ = require('lodash');
-
 let shortcuts = {};
 
 class ShortcutRegistry {

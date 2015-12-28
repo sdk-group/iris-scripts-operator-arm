@@ -2,8 +2,6 @@
 
 let Module = require('./Module.js');
 
-let _ = require('lodash');
-
 let connection = require('./Connection.js');
 
 class User extends Module {

@@ -1,7 +1,5 @@
 'use strict'
 
-let _ = require('lodash');
-
 class Connection {
   constructor() {
     this.methods = {};
