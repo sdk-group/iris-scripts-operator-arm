@@ -13,6 +13,16 @@ let init_data = {
 };
 
 let default_settings = [{
+  element: 'slider',
+  label: 'Слайдер',
+  default: '10',
+  params: {
+    min: 0,
+    max: 100
+  },
+  value: undefined,
+  validator: false
+}, {
   element: 'input',
   label: 'Настройка',
   default: '00-00',
