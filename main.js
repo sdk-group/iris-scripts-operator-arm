@@ -13,43 +13,52 @@ let init_data = {
 };
 
 let default_settings = [{
-  element: 'slider',
-  label: 'Слайдер',
-  default: '10',
-  params: {
-    min: 0,
-    max: 100
-  },
-  value: undefined,
-  validator: false
-}, {
-  element: 'input',
-  label: 'Настройка',
-  default: '00-00',
-  params: undefined,
-  value: undefined,
-  validator: false
-}, {
-  element: 'checkbox',
-  label: 'Чекалка',
-  default: 'true',
-  params: undefined,
-  value: undefined,
-  validator: false
-}, {
-  element: 'list',
-  label: 'Листик',
-  default: 1,
-  params: [0, 1, 2, 3],
-  value: undefined,
-  validator: false
-}, {
-  element: 'dropdown',
-  label: 'Дроп',
-  default: 1,
-  params: ['d1', 'd2', 'd3', 'd4'],
-  value: undefined,
-  validator: false
+  name: 'Группа1',
+  items: {
+    slider1: {
+      element: 'slider',
+      label: 'Слайдер',
+      default: '10',
+      params: {
+        min: 0,
+        max: 100
+      },
+      value: undefined,
+      validator: false
+    },
+    input1: {
+      element: 'input',
+      label: 'Настройка',
+      default: '00-00',
+      params: undefined,
+      value: undefined,
+      validator: false
+    },
+    checkbox1: {
+      element: 'toggle',
+      label: 'Чекалка',
+      default: 'true',
+      params: undefined,
+      value: undefined,
+      validator: false
+    },
+    list1: {
+      element: 'list',
+      label: 'Листик',
+      default: 1,
+      params: [0, 1, 2, 3],
+      value: undefined,
+      validator: false
+    },
+    dropdown1: {
+      element: 'dropdown',
+      label: 'Дроп',
+      default: 1,
+      params: ['d1', 'd2', 'd3', 'd4'],
+      value: undefined,
+      validator: false
+    }
+  }
 }];
 
 ShortcutRegistry.init(init_data);

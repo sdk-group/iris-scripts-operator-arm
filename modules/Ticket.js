@@ -30,6 +30,9 @@ class Ticket {
     let state = 'postponed';
     return this.queue.changeState(state, this);
   }
+  callAgain() {
+    return this.queue.callAgain(this);
+  }
 }
 
 module.exports = Ticket;
