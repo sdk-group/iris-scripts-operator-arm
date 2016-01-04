@@ -19,14 +19,14 @@ class Queue extends Module {
       this.emit('queue.update', data);
     });
   }
-  getNextTicket() {
+  getNext() {
     if (!this.user.isLogged()) return Promise.reject('not logged');
 
     let user_id = this.user.fields.id;
 
     return connection.request(getShortcut('next'), user_id).then((data) => this.makeTicket(data));
   }
-  getSpecificTicket(ticket) {
+  getTicketById(ticket) {
     if (!this.user.isLogged()) return Promise.reject('not logged');
 
     let ticket_id = (tiket instanceof Ticket) ? ticket.getId() : ticket;
@@ -49,7 +49,7 @@ class Queue extends Module {
       route
     });
   }
-  listTickets(state, from, to) {
+  getQueuePage(state, limit, offset) {
     if (!this.user.isLogged()) return Promise.reject('not logged');
 
     let user_id = this.user.fields.id;
