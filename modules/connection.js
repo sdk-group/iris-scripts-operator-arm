@@ -4,7 +4,10 @@ class Connection {
   constructor() {
     this.methods = {};
     this.token = false;
-    this.ready = new Promise((res) => this.resolve = res);
+    let self = this;
+    this.ready = new Promise(function(res) {
+      self.resolve = res
+    });
   }
   afterConnection(cb) {
     return this.ready.then(cb);
@@ -25,7 +28,7 @@ class Connection {
   setToken(token) {
     this.token = token || false;
   }
-  subscribe(uir, callback, method) {
+  subscribe(uri, callback, method) {
     return this.afterConnection(() => this.getMethod(method).subscribe(uri, callback));
   }
   unsubscribe(uri, callback, method) {
@@ -33,6 +36,6 @@ class Connection {
   }
 }
 
-let connection = new Connection();
+var connection = new Connection();
 
 module.exports = connection;

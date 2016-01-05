@@ -12,51 +12,78 @@ let init_data = {
   }
 };
 
+
+// let default_settings = [{
+//   name: 'Группа1',
+//   items: {
+//     slider1: {
+//       element: 'slider',
+//       label: 'Слайдер',
+//       default: '10',
+//       params: {
+//         min: 0,
+//         max: 100
+//       },
+//       value: undefined,
+//       validator: false
+//     },
+//     input1: {
+//       element: 'input',
+//       label: 'Настройка',
+//       default: '00-00',
+//       params: undefined,
+//       value: undefined,
+//       validator: false
+//     },
+//     checkbox1: {
+//       element: 'toggle',
+//       label: 'Чекалка',
+//       default: 'true',
+//       params: undefined,
+//       value: undefined,
+//       validator: false
+//     },
+//     list1: {
+//       element: 'list',
+//       label: 'Листик',
+//       default: 1,
+//       params: [0, 1, 2, 3],
+//       value: undefined,
+//       validator: false
+//     },
+//     dropdown1: {
+//       element: 'dropdown',
+//       label: 'Дроп',
+//       default: 1,
+//       params: ['d1', 'd2', 'd3', 'd4'],
+//       value: undefined,
+//       validator: false
+//     }
+//   }
+// }];
+
 let default_settings = [{
-  name: 'Группа1',
+  name: 'Базовые настройки',
   items: {
-    slider1: {
-      element: 'slider',
-      label: 'Слайдер',
-      default: '10',
-      params: {
-        min: 0,
-        max: 100
-      },
-      value: undefined,
-      validator: false
-    },
-    input1: {
+    office_id: {
       element: 'input',
-      label: 'Настройка',
-      default: '00-00',
-      params: undefined,
-      value: undefined,
-      validator: false
+      label: 'Номер офиса',
+      default: '0'
     },
-    checkbox1: {
-      element: 'toggle',
-      label: 'Чекалка',
-      default: 'true',
-      params: undefined,
-      value: undefined,
-      validator: false
+    workstation_id: {
+      element: 'input',
+      label: 'Номер рабочего места',
+      default: '0'
     },
-    list1: {
-      element: 'list',
-      label: 'Листик',
-      default: 1,
-      params: [0, 1, 2, 3],
-      value: undefined,
-      validator: false
+    ip: {
+      element: 'input',
+      label: 'ip-адресс',
+      default: '127.0.0.1'
     },
-    dropdown1: {
-      element: 'dropdown',
-      label: 'Дроп',
-      default: 1,
-      params: ['d1', 'd2', 'd3', 'd4'],
-      value: undefined,
-      validator: false
+    port: {
+      element: 'input',
+      label: 'Порт',
+      default: "80"
     }
   }
 }];
