@@ -12,7 +12,8 @@ class Connection {
   afterConnection(cb) {
     return this.ready.then(cb);
   }
-  addConnectionMethod(method) {
+  addConnectionProvider(provider) {
+    let method = provider.getMethod();
     console.log('method added', method.name);
     this.methods[method.name] = method;
     this.current_method = method.name;

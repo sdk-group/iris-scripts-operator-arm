@@ -92,18 +92,19 @@ ShortcutRegistry.init(init_data);
 
 let Entry = require('./EntryPoint.js');
 let User = require('./modules/User.js');
-let Queue = require('./modules/Queue.js');
 let Settings = require('./modules/Settings.js');
 let connection = require('./modules/Connection.js');
+let History = require('./modules/History.js');
 
 let arm_settings = new Settings(default_settings);
 let arm_operator = new User();
-let queue = new Queue(arm_operator);
+let arm_history = new History();
+
 let entry = new Entry();
 
 entry.expose('connection', connection);
 entry.expose('user', arm_operator);
-entry.expose('queue', queue);
 entry.expose('settings', arm_settings);
+entry.expose('history', arm_history);
 
 module.exports = entry;

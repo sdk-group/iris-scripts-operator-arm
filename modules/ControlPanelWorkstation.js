@@ -8,16 +8,30 @@ let ShortcutRegistry = require('./ShortcutRegistry.js');
 
 let getShortcut = ShortcutRegistry.getShortcut.bind(ShortcutRegistry, 'queue');
 
-class Queue extends Module {
+class ControlPanelWorkstation extends Module {
   constructor(user) {
     super();
     this.user = user;
-    this.in_queue = 0;
-    this.waiting = 0;
+    this.type = 'control-panel';
     this.current_ticket = false;
-    connection.subscribe(getShortcut('update_uri'), (data) => {
+  }
+  init(id, data) {
+    this.label = data.label;
+    this.id = id;
+
+    let callback = (data) => {
       this.emit('queue.update', data);
+    };
+
+    this.user.on('user.fields.changed', () => {
+      if (this.user.isLogged()) {
+        connection.subscribe(getShortcut('update_uri'), callback);
+      } else {
+        connection.unsubscribe(getShortcut('update_uri'), callback);
+      }
     });
+
+    return true;
   }
   getNext() {
     if (!this.user.isLogged()) return Promise.reject('not logged');
@@ -73,4 +87,4 @@ class Queue extends Module {
   }
 }
 
-module.exports = Queue;
+module.exports = ControlPanelWorkstation;

@@ -3,30 +3,47 @@
 let Module = require('./Module.js');
 
 let connection = require('./Connection.js');
+let arm_types = {
+  'control-panel': require('./ControlPanelWorkstation.js')
+};
+
+const default_WS = [{
+  type: 'control-panel',
+  id: 1
+}];
 
 class User extends Module {
   constructor() {
     super();
     this.fields = {};
+    this.occupied_workstations = [];
   }
   getId() {
     return this.fields.id;
   }
+  getWorkstation(type) {
+
+    return _.find(this.occupied_workstations, (ws) => {
+      return ws.type == type
+    });
+  }
   login(login, password) {
     return connection.request('/login', {
-      login, password
-    }).then((result) => {
-      connection.setToken(result.token);
-      return this.fields.logged_in = !!result.token;
-    }).then(() => {
-      if (!this.isLogged()) return false;
-      return connection.request('/userinfo').then((result) => _.assign(this.fields, result));
-    }).then((result) => {
-      this.emit('user.fields.changed', this.fields);
-      return true;
-    });
+        login, password
+      }).then((result) => {
+        connection.setToken(result.token);
+        this.fields.logged_in = !!result.token;
 
-
+        return this.isLogged() ? connection.request('/userinfo') : Promise.reject('login failed')
+      })
+      .then((result) => {
+        _.assign(this.fields, result);
+        return this.initWS();
+      })
+      .then(() => {
+        this.emit('user.fields.changed', this.fields);
+        return true;
+      });
   }
   isLogged() {
     return !!this.fields.logged_in;
@@ -38,6 +55,23 @@ class User extends Module {
   takeBreak() {
     console.log('mock for break');
     return true;
+  }
+  initWS() {
+    let workstations = this.fields.workstations;
+    let init = _.map(default_WS, (ws) => {
+      let init_data = workstations[ws.type][ws.id];
+      if (!arm_types.hasOwnProperty(ws.type)) {
+        throw new Error('Unknown arm type');
+      }
+      let Model = arm_types[ws.type];
+      let WS = new Model(this);
+
+      this.occupied_workstations.push(WS);
+
+      return WS.init(ws.id, init_data);
+    });
+
+    return Promise.all(init);
   }
 }
 
