@@ -19,8 +19,11 @@ class ControlPanelWorkstation extends Module {
     this.label = data.label;
     this.id = id;
 
-    let callback = (data) => {
-      this.emit('queue.update', data);
+    let callback = (result) => {
+      _.forEach(result, (queue) => {
+        queue.tickets = _.map(queue.tickets, (ticket_data) => this.makeTicket(ticket_data));
+      });
+      this.emit('queue.update', result);
     };
 
     this.user.on('user.fields.changed', () => {
@@ -34,6 +37,7 @@ class ControlPanelWorkstation extends Module {
     return true;
   }
   getNext() {
+    console.log('next ticket');
     if (!this.user.isLogged()) return Promise.reject('not logged');
 
     let user_id = this.user.fields.id;
@@ -41,17 +45,16 @@ class ControlPanelWorkstation extends Module {
     return connection.request(getShortcut('next'), user_id).then((data) => this.makeTicket(data));
   }
   getTicketById(ticket) {
+    console.log('get ticket by id', ticket.getId());
     if (!this.user.isLogged()) return Promise.reject('not logged');
 
-    let ticket_id = (tiket instanceof Ticket) ? ticket.getId() : ticket;
+    let ticket_id = (ticket instanceof Ticket) ? ticket.getId() : ticket;
 
     return connection.request(getShortcut('specific'), ticket_id).then((data) => this.makeTicket(data));
   }
   makeTicket(data) {
-    if (!data) return Promise.resolve('no such ticket');
-
-    this.current_ticket = new Ticket(data, this);
-    return this.current_ticket;
+    let ticket = new Ticket(data, this);
+    return ticket;
   }
   redirectTicket(route, ticket) {
     if (!this.user.isLogged()) return Promise.reject('not logged');
@@ -74,7 +77,11 @@ class ControlPanelWorkstation extends Module {
       count
     });
   }
+  callAgain(ticket) {
+    console.log('play sound on Room display');
+  }
   changeState(state, ticket) {
+    console.log('change state', state);
     if (!this.user.isLogged()) return Promise.reject('not logged');
 
     ticket = ticket || this.current_ticket;

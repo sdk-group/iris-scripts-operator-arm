@@ -3,26 +3,25 @@
 class Ticket {
   constructor(data, queue) {
     this.queue = queue;
+    let params_map = ['ticket_id', 'label', 'service', 'service_count', 'state', 'client', 'time_bounds'];
+
+    _.forEach(params_map, (param) => this[param] = data[param]);
   }
   getId() {
     return this.ticket_id;
   }
-  getInfo() {
-    return this.info;
-  }
   getLabel() {
-    //@NOTE: former human redable id
-
+    return this.label;
   }
-  waiting() {
+  returnToQueue() {
     let state = 'waiting';
     return this.queue.changeState(state, this)
   }
-  processing() {
+  arrived() {
     let state = 'processing';
     return this.queue.changeState(state, this);
   }
-  closed() {
+  close() {
     let state = 'closed';
     return this.queue.changeState(state, this);
   }
@@ -32,6 +31,9 @@ class Ticket {
   }
   callAgain() {
     return this.queue.callAgain(this);
+  }
+  process() {
+    return this.queue.getTicketById(this)
   }
 }
 
