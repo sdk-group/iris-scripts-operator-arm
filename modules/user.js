@@ -22,21 +22,22 @@ class User extends Module {
     return this.fields.id;
   }
   getWorkstation(type) {
-
     return _.find(this.occupied_workstations, (ws) => {
       return ws.type == type
     });
   }
   login(login, password) {
     return connection.request('/login', {
-        login, password
-      }).then((result) => {
-        connection.setToken(result.token);
-        this.fields.logged_in = !!result.token;
-
-        return this.isLogged() ? connection.request('/userinfo') : Promise.reject('login failed')
-      })
+        user: login,
+        password: password
+      }, 'http')
+      .then((result) => result.value ? connection.setToken(result.token) : Promise.reject({
+        reason: 'login failed',
+        data: result
+      }))
+      .then(() => connection.request('/operator/info'))
       .then((result) => {
+        this.fields.logged_in = true;
         _.assign(this.fields, result);
         return this.initWS();
       })

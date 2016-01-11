@@ -4,36 +4,37 @@ class Connection {
   constructor() {
     this.methods = {};
     this.token = false;
-    let self = this;
-    this.ready = new Promise(function(res) {
-      self.resolve = res
-    });
-  }
-  afterConnection(cb) {
-    return this.ready.then(cb);
   }
   addConnectionProvider(provider) {
     let method = provider.getMethod();
-    console.log('method added', method.name);
+    console.log('Connection: method added', method.name);
     this.methods[method.name] = method;
     this.current_method = method.name;
-    this.resolve(true);
+
   }
   getMethod(name) {
     let method_name = name || this.current_method;
     return this.methods[method_name];
   }
-  request(uri, data, method) {
-    return this.afterConnection(() => this.getMethod(method).request(uri, data));
-  }
   setToken(token) {
     this.token = token || false;
+
+    if (!token) return Promise.reject({
+      reason: 'Invalid token'
+    });
+
+    let connections_notified = _.map(this.methods, (method) => method.auth(token));
+
+    return Promise.all(connections_notified);
+  }
+  request(uri, data, method) {
+    return this.getMethod(method).request(uri, data);
   }
   subscribe(uri, callback, method) {
-    return this.afterConnection(() => this.getMethod(method).subscribe(uri, callback));
+    return this.getMethod(method).subscribe(uri, callback);
   }
   unsubscribe(uri, callback, method) {
-    return this.afterConnection(() => this.getMethod(method).request(uri, callback));
+    return this.getMethod(method).request(uri, callback);
   }
 }
 
