@@ -3,9 +3,28 @@
 class Ticket {
   constructor(data, queue) {
     this.queue = queue;
-    let params_map = ['ticket_id', 'label', 'service', 'service_count', 'state', 'client', 'time_bounds'];
+    let params_map = {
+      'ticket_id': {},
+      'label': {},
+      'service': {},
+      'service_count': {},
+      'state': {},
+      'client': {},
+      'time_description': {},
+      'booking_date': {
+        transform: function(utc_date) {
+          let date = new Date(utc_date);
+          return date.getTime();
+        }
+      }
+    };
 
-    _.forEach(params_map, (param) => this[param] = data[param]);
+    _.forEach(params_map, (param_data, param_name) => {
+      let name = param_data.name || param_name;
+      let value = param_data.transform instanceof Function ? param_data.transform(data[param_name]) : data[param_name];
+
+      this[name] = value;
+    });
   }
   getId() {
     return this.ticket_id;
