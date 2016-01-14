@@ -7,10 +7,6 @@ let arm_types = {
   'control-panel': require('./ControlPanelWorkstation.js')
 };
 
-const default_WS = [{
-  type: 'control-panel',
-  id: 1
-}];
 
 class User extends Module {
   constructor() {
@@ -59,6 +55,8 @@ class User extends Module {
   }
   initWS() {
     let workstations = this.fields.workstations;
+    let default_WS = [this.fields.workstations[0]];
+
     let init = _.map(default_WS, (ws) => {
       let init_data = workstations[ws.type][ws.id];
       if (!arm_types.hasOwnProperty(ws.type)) {

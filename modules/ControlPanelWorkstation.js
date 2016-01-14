@@ -4,9 +4,6 @@ let Module = require('./Module.js');
 
 let connection = require('./Connection.js');
 let Ticket = require('./Ticket.js');
-let ShortcutRegistry = require('./ShortcutRegistry.js');
-
-let getShortcut = ShortcutRegistry.getShortcut.bind(ShortcutRegistry, 'queue');
 
 class ControlPanelWorkstation extends Module {
   constructor(user) {
