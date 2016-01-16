@@ -32,11 +32,7 @@ class User extends Module {
         data: result
       }))
       .then(() => connection.request('/operator/info'))
-      .then((result) => {
-        this.fields.logged_in = true;
-        _.assign(this.fields, result);
-        return this.initWS();
-      })
+      .then((result) => this.setFields(result) && this.initWS())
       .then(() => {
         this.emit('user.fields.changed', this.fields);
         return true;
@@ -53,16 +49,29 @@ class User extends Module {
     console.log('mock for break');
     return true;
   }
+  setFields(result) {
+    this.fields.logged_in = true;
+    let key = _.keys(result.employee)[0];
+    this.fields.name = result.employee[key].first_name;
+    this.fields.lastname = result.employee[key].last_name;
+    this.fields.middlename = result.employee[key].middle_name;
+    this.fields.wp = result.wp;
+    return true;
+  }
   initWS() {
-    let workstations = this.fields.workstations;
-    let default_WS = [this.fields.workstations[0]];
+    let workstations = this.fields.wp;
+    //@FIXIT: ws picker
+    let default_WS = _.keys(workstations).slice(0, 1);
 
     let init = _.map(default_WS, (ws) => {
-      let init_data = workstations[ws.type][ws.id];
-      if (!arm_types.hasOwnProperty(ws.type)) {
+      let init_data = workstations[ws];
+
+      let type = init_data.device_type;
+      console.log(type);
+      if (!arm_types.hasOwnProperty(type)) {
         throw new Error('Unknown arm type');
       }
-      let Model = arm_types[ws.type];
+      let Model = arm_types[type];
       let WS = new Model(this);
 
       this.occupied_workstations.push(WS);

@@ -33,7 +33,7 @@ class Ticket {
     return this.label;
   }
   returnToQueue() {
-    let state = 'waiting';
+    let state = 'open';
     return this.queue.changeState(state, this)
   }
   arrived() {

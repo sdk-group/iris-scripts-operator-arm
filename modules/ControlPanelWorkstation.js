@@ -4,6 +4,9 @@ let Module = require('./Module.js');
 
 let connection = require('./Connection.js');
 let Ticket = require('./Ticket.js');
+let ShortcutRegistry = require('./ShortcutRegistry.js');
+
+let getShortcut = ShortcutRegistry.getShortcut.bind(ShortcutRegistry, 'queue');
 
 class ControlPanelWorkstation extends Module {
   constructor(user) {
@@ -17,10 +20,23 @@ class ControlPanelWorkstation extends Module {
     this.id = id;
 
     let callback = (result) => {
-      _.forEach(result, (queue) => {
-        queue.tickets = _.map(queue.tickets, (ticket_data) => this.makeTicket(ticket_data));
+      let data = {
+        postponed: {
+          count: result.postponed.count,
+          tickets: []
+        },
+        live: {
+          count: result.live.count,
+          tickets: []
+        }
+      };
+
+      _.forEach(['live', 'postponed'], (name) => {
+        let q = result[name] || {};
+        data[name].tickets = _.map(q.tickets, (ticket_data) => this.makeTicket(ticket_data));
       });
-      this.emit('queue.update', result);
+
+      this.emit('queue.update', data);
     };
 
     this.user.on('user.fields.changed', () => {

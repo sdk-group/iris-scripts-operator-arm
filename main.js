@@ -4,7 +4,7 @@ let ShortcutRegistry = require('./modules/ShortcutRegistry.js');
 
 let init_data = {
   'queue': {
-    update_uri: 'listen://queue/update',
+    update_uri: '/queue/head',
     next: '/queue/get/next',
     specific: '/queue/get/specific',
     list: '/queue/list',
