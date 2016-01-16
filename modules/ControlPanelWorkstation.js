@@ -19,35 +19,22 @@ class ControlPanelWorkstation extends Module {
     this.label = data.label;
     this.id = id;
 
-    let callback = (result) => {
-      let data = {
-        postponed: {
-          count: result.postponed.count,
-          tickets: []
-        },
-        live: {
-          count: result.live.count,
-          tickets: []
-        }
-      };
-
-      _.forEach(['live', 'postponed'], (name) => {
-        let q = result[name] || {};
-        data[name].tickets = _.map(q.tickets, (ticket_data) => this.makeTicket(ticket_data));
+    connection.subscribe(getShortcut('update_uri'), (result) => {
+      let data = _.mapValues(result, (value, key) => {
+        if (key === 'room') return value;
+        return {
+          count: value.count,
+          tickets: _.map(value.tickets, (ticket_data) => this.makeTicket(ticket_data))
+        };
       });
 
-      this.emit('queue.update', data);
-    };
-
-    this.user.on('user.fields.changed', () => {
-      if (this.user.isLogged()) {
-        connection.subscribe(getShortcut('update_uri'), callback);
-      } else {
-        connection.unsubscribe(getShortcut('update_uri'), callback);
-      }
+      this.emit(getShortcut('update_uri'), data);
     });
 
     return true;
+  }
+  onUpdate(callback) {
+    return this.on(getShortcut('update_uri'), callback);
   }
   getNext() {
     console.log('next ticket');
