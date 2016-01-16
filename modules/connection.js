@@ -36,6 +36,9 @@ class Connection {
   unsubscribe(uri, callback, method) {
     return this.getMethod(method).request(uri, callback);
   }
+  close() {
+    return _.map(this.methods, (method) => method.close())
+  }
 }
 
 var connection = new Connection();

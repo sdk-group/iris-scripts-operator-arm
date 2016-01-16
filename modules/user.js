@@ -28,7 +28,7 @@ class User extends Module {
         password: password
       }, 'http')
       .then((result) => result.value ? connection.setToken(result.token) : Promise.reject({
-        reason: 'login failed',
+        reason: result.reason,
         data: result
       }))
       .then(() => connection.request('/operator/info'))
@@ -42,12 +42,18 @@ class User extends Module {
     return !!this.fields.logged_in;
   }
   logout() {
-    console.log('mock for logout');
-    return true;
+    return connection.request('/logout', {}, 'http').then((result) => {
+      if (!result.value) return Promise.reject(result);
+
+      this.fields.logged_in = false;
+      connection.close();
+      this.emit('user.fields.changed', this.fields);
+      return true;
+    });
   }
   takeBreak() {
     console.log('mock for break');
-    return true;
+    return connection.request('/logout', {}, 'http')
   }
   setFields(result) {
     this.fields.logged_in = true;
